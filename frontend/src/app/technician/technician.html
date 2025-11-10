@@ -1,0 +1,27 @@
+<div class="p-6">
+  <h2 class="text-2xl font-semibold mb-4">Technician Dashboard</h2>
+
+  <table class="table">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="th">ID</th>
+        <th class="th">Customer</th>
+        <th class="th">Product</th>
+        <th class="th">Status</th>
+        <th class="th">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let t of tickets">
+        <td class="td">{{t.id}}</td>
+        <td class="td">{{t.customerName}}</td>
+        <td class="td">{{t.productName}}</td>
+        <td class="td">{{t.status}}</td>
+        <td class="td">
+          <button (click)="updateStatus(t.id, 'In Progress')" class="btn bg-blue-500 mr-1">In Progress</button>
+          <button (click)="updateStatus(t.id, 'Completed')" class="btn bg-green-500">Completed</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
