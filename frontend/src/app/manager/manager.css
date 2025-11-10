@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+/* === Table container === */
+.table {
+  @apply w-full border-collapse bg-white rounded-lg shadow-md overflow-hidden;
+}
+
+/* === Table headers === */
+.th {
+  @apply text-left px-4 py-2 font-semibold text-gray-700 border-b border-gray-200 uppercase text-sm;
+}
+
+/* === Table cells === */
+.td {
+  @apply px-4 py-2 border-b border-gray-100 text-gray-700;
+}
+
+/* === Zebra striping effect === */
+tbody tr:nth-child(even) {
+  @apply bg-gray-50;
+}
+
+/* === Row hover effect === */
+tbody tr:hover {
+  @apply bg-blue-50 transition-colors;
+}
+
+/* === Buttons === */
+.btn {
+  @apply text-white px-3 py-1 rounded text-sm font-medium transition;
+}
+
+/* Green "Close" button */
+.btn.bg-green-600:hover {
+  @apply bg-green-700;
+}
+
+/* Optional generic blue button style */
+.btn-blue {
+  @apply bg-blue-600 hover:bg-blue-700;
+}
+
+/* === Select dropdowns === */
+select {
+  @apply border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400;
+}

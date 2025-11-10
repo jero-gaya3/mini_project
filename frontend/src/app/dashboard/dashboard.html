@@ -1,0 +1,15 @@
+<div class="min-h-screen bg-gray-100">
+  <nav class="bg-blue-600 text-white p-4 flex justify-between">
+    <span class="font-bold">Post-Sales Staff Dashboard</span>
+    <div>
+      <button (click)="current='create'" class="mr-2">Create Ticket</button>
+      <button (click)="current='mytickets'" class="mr-4">My Tickets</button>
+      <button (click)="logout()" class="bg-red-500 px-3 py-1 rounded">Logout</button>
+    </div>
+  </nav>
+
+  <div class="p-6">
+    <app-create-ticket *ngIf="current==='create'"></app-create-ticket>
+    <app-my-tickets *ngIf="current==='mytickets'"></app-my-tickets>
+  </div>
+</div>
