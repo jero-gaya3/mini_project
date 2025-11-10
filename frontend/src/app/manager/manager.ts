@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
 import { AppState } from '../state/app.state';
 import * as TicketActions from '../state/ticket.actions';
 import { ApiService } from '../services/api.service';
@@ -16,7 +17,11 @@ export class ManagerComponent implements OnInit {
   tickets$: any;
   technicians: any[] = [];
 
-  constructor(private store: Store<AppState>, private api: ApiService) {}
+  constructor(
+    private store: Store<AppState>,
+    private api: ApiService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.tickets$ = this.store.select(state => state.tickets.tickets);
@@ -26,10 +31,19 @@ export class ManagerComponent implements OnInit {
 
   assign(ticketId: number, techId: string) {
     if (!techId) return;
-    this.api.assignTicket(ticketId, +techId).subscribe(() => this.store.dispatch(TicketActions.loadTickets()));
+    this.api.assignTicket(ticketId, +techId).subscribe(() =>
+      this.store.dispatch(TicketActions.loadTickets())
+    );
   }
 
   close(ticketId: number) {
-    this.api.closeTicket(ticketId).subscribe(() => this.store.dispatch(TicketActions.loadTickets()));
+    this.api.closeTicket(ticketId).subscribe(() =>
+      this.store.dispatch(TicketActions.loadTickets())
+    );
+  }
+
+  logout() {
+    localStorage.clear();
+    this.router.navigate(['/']);
   }
 }

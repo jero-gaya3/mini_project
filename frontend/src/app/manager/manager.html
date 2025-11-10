@@ -1,33 +1,46 @@
-<div class="p-6">
-  <h2 class="text-2xl font-semibold mb-4">Manager Dashboard</h2>
+<div class="min-h-screen bg-gray-100">
+  <!-- Top Navigation Bar -->
+  <nav class="bg-blue-600 text-white p-4 flex justify-between">
+    <span class="font-bold">Manager Dashboard</span>
+    <div>
+      <button (click)="logout()" class="bg-red-500 px-3 py-1 rounded">Logout</button>
+    </div>
+  </nav>
 
-  <table class="table">
-    <thead class="bg-gray-100">
-      <tr>
-        <th class="th">ID</th>
-        <th class="th">Customer</th>
-        <th class="th">Product</th>
-        <th class="th">Status</th>
-        <th class="th">Assign</th>
-        <th class="th">Close</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let t of (tickets$ | async)">
-        <td class="td">{{ t.id }}</td>
-        <td class="td">{{ t.customerName }}</td>
-        <td class="td">{{ t.productName }}</td>
-        <td class="td">{{ t.status }}</td>
-        <td class="td">
-          <select #sel (change)="assign(t.id, sel.value)" class="border px-2 py-1 rounded">
-            <option value="">Select</option>
-            <option *ngFor="let tech of technicians" [value]="tech.id">{{ tech.name }}</option>
-          </select>
-        </td>
-        <td class="td">
-          <button (click)="close(t.id)" class="btn bg-green-600">Close</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <!-- Page Content -->
+  <div class="p-6">
+    <h2 class="text-2xl font-semibold mb-4">Tickets Overview</h2>
+
+    <table class="table w-full border-collapse">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="th text-left p-2 border">ID</th>
+          <th class="th text-left p-2 border">Customer</th>
+          <th class="th text-left p-2 border">Product</th>
+          <th class="th text-left p-2 border">Status</th>
+          <th class="th text-left p-2 border">Assign</th>
+          <th class="th text-left p-2 border">Close</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let t of (tickets$ | async)" class="border-b hover:bg-gray-50">
+          <td class="td p-2 border">{{ t.id }}</td>
+          <td class="td p-2 border">{{ t.customerName }}</td>
+          <td class="td p-2 border">{{ t.productName }}</td>
+          <td class="td p-2 border">{{ t.status }}</td>
+          <td class="td p-2 border">
+            <select #sel (change)="assign(t.id, sel.value)" class="border px-2 py-1 rounded">
+              <option value="">Select</option>
+              <option *ngFor="let tech of technicians" [value]="tech.id">{{ tech.name }}</option>
+            </select>
+          </td>
+          <td class="td p-2 border">
+            <button (click)="close(t.id)" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">
+              Close
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
