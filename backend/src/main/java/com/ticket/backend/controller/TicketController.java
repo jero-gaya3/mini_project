@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -52,15 +53,20 @@ public class TicketController {
         return ticketRepository.findByAssignedTo(id);
     }
 
-    // 🟡 MANAGER - assign a technician to a ticket
+   // 🟡 MANAGER - assign a technician to a ticket
     @PreAuthorize("hasAuthority('MANAGER')")
     @PutMapping("/{id}/assign")
-    public ResponseEntity<Ticket> assignTicket(@PathVariable Long id, @RequestParam Long technicianId) {
-        Ticket ticket = ticketRepository.findById(id).orElseThrow();
+    public ResponseEntity<Ticket> assignTicket(@PathVariable Long id, @RequestBody Map<String, Long> body) {
+        Long technicianId = body.get("assignedTo");
+        Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ticket not found"));
+
         ticket.setAssignedTo(technicianId);
         ticket.setStatus(Status.ASSIGNED);
         ticket.setUpdatedAt(LocalDateTime.now());
-        return ResponseEntity.ok(ticketRepository.save(ticket));
+
+        Ticket updatedTicket = ticketRepository.save(ticket);
+        return ResponseEntity.ok(updatedTicket);
     }
 
     // 🔵 TECHNICIAN - update ticket status
