@@ -1,5 +1,15 @@
+<!-- Top Navbar -->
+<nav class="bg-blue-600 text-white p-4 flex justify-between items-center">
+  <h1 class="text-xl font-semibold">Technician Dashboard</h1>
+  <div>
+    <button (click)="logout()" class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm font-medium">
+      Logout
+    </button>
+  </div>
+</nav>
+
 <div class="p-6">
-  <h2 class="text-2xl font-semibold mb-4">Technician Dashboard</h2>
+  <h2 class="text-2xl font-semibold mb-4">My Assigned Tickets</h2>
 
   <table class="table">
     <thead class="bg-gray-100">
@@ -13,13 +23,44 @@
     </thead>
     <tbody>
       <tr *ngFor="let t of tickets">
-        <td class="td">{{t.id}}</td>
-        <td class="td">{{t.customerName}}</td>
-        <td class="td">{{t.productName}}</td>
-        <td class="td">{{t.status}}</td>
+        <td class="td">{{ t.id }}</td>
+        <td class="td">{{ t.customerName }}</td>
+        <td class="td">{{ t.productName }}</td>
         <td class="td">
-          <button (click)="updateStatus(t.id, 'In Progress')" class="btn bg-blue-500 mr-1">In Progress</button>
-          <button (click)="updateStatus(t.id, 'Completed')" class="btn bg-green-500">Completed</button>
+          <span 
+            class="status-badge"
+            [ngClass]="{
+              'pending': t.status === 'ASSIGNED',
+              'bg-blue-100 text-blue-800': t.status === 'IN_PROGRESS',
+              'bg-green-100 text-green-800': t.status === 'COMPLETED'
+            }">
+            {{ t.status }}
+          </span>
+        </td>
+
+        <!-- ✅ Only show action buttons if ticket is ASSIGNED or IN_PROGRESS -->
+        <td class="td">
+          <ng-container *ngIf="t.status === 'ASSIGNED' || t.status === 'IN_PROGRESS'; else noAction">
+            <button
+              *ngIf="t.status === 'ASSIGNED'"
+              (click)="updateStatus(t.id, 'IN_PROGRESS')"
+              class="btn bg-blue-500 mr-1"
+            >
+              Start
+            </button>
+            <button
+              *ngIf="t.status === 'IN_PROGRESS'"
+              (click)="updateStatus(t.id, 'COMPLETED')"
+              class="btn bg-green-500"
+            >
+              Close
+            </button>
+          </ng-container>
+
+          <!-- Hide buttons for COMPLETED -->
+          <ng-template #noAction>
+            <span class="status-badge bg-green-100 text-green-800">COMPLETED</span>
+          </ng-template>
         </td>
       </tr>
     </tbody>

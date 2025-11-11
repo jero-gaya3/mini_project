@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-gray-100">
   <!-- Top Navigation Bar -->
-  <nav class="bg-blue-600 text-white p-4 flex justify-between">
+ <nav class="bg-blue-600 text-white p-4 flex justify-between">
     <span class="font-bold">Manager Dashboard</span>
     <div>
       <button (click)="logout()" class="bg-red-500 px-3 py-1 rounded">
@@ -31,16 +31,17 @@
           <td class="td">{{ t.customerName }}</td>
           <td class="td">{{ t.productName }}</td>
 
-          <!-- Status badge -->
+          <!-- ✅ Status badge -->
           <td class="td">
             <span class="status-badge" [ngClass]="statusClass(t.status)">
               {{ t.status }}
             </span>
           </td>
 
-          <!-- Assign column -->
+          <!-- ✅ Assign column -->
           <td class="td">
-            <ng-container *ngIf="t.status !== 'COMPLETED'; else assignedView">
+            <!-- Show dropdown only if ticket is not CLOSED or COMPLETED -->
+            <ng-container *ngIf="t.status !== 'CLOSED' && t.status !== 'COMPLETED'; else assignedView">
               <select
                 #sel
                 class="border px-2 py-1 rounded"
@@ -54,20 +55,20 @@
               </select>
             </ng-container>
 
-            <!-- Read-only assigned name -->
+            <!-- ✅ Show assigned technician name if ticket is CLOSED/COMPLETED -->
             <ng-template #assignedView>
-              <span class="text-gray-600">
+              <span class="text-gray-600 font-medium">
                 {{ getTechnicianName(t.assignedTo) || 'Unassigned' }}
               </span>
             </ng-template>
           </td>
 
-          <!-- Close button only for completed tickets -->
+          <!-- ✅ Show Close button only for COMPLETED -->
           <td class="td">
             <button
               *ngIf="t.status === 'COMPLETED'"
               (click)="close(t.id)"
-              class="btn bg-green-600"
+              class="btn bg-green-600 hover:bg-green-700"
             >
               Close
             </button>

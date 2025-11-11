@@ -61,11 +61,13 @@ export class ApiService {
   }
 
   /** ===== TECHNICIAN ===== */
-  getTechnicianTickets(id: number): Observable<any> {
-    return this.http.get(`${this.base}/tickets/technician/${id}`, this.headers());
-  }
+getTechnicianTickets(id: number): Observable<any> {
+  return this.http.get(`${this.base}/tickets/technician/${id}`, this.headers());
+}
 
-  updateStatus(id: number, status: string): Observable<any> {
-    return this.http.put(`${this.base}/tickets/${id}/status`, { status }, this.headers());
-  }
+updateStatus(id: number, status: string): Observable<any> {
+  // Send status as query parameter (like in Postman)
+  return this.http.put(`${this.base}/tickets/${id}/status?status=${status}`, {}, this.headers());
+}
+
 }
