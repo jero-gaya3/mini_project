@@ -3,7 +3,9 @@
   <nav class="bg-blue-600 text-white p-4 flex justify-between">
     <span class="font-bold">Manager Dashboard</span>
     <div>
-      <button (click)="logout()" class="bg-red-500 px-3 py-1 rounded">Logout</button>
+      <button (click)="logout()" class="bg-red-500 px-3 py-1 rounded">
+        Logout
+      </button>
     </div>
   </nav>
 
@@ -12,33 +14,66 @@
     <h2 class="text-2xl font-semibold mb-4">Tickets Overview</h2>
 
     <table class="table">
-    <thead class="bg-gray-100">
-      <tr>
-        <th class="th">ID</th>
-        <th class="th">Customer</th>
-        <th class="th">Product</th>
-        <th class="th">Status</th>
-        <th class="th">Assign</th>
-        <th class="th">Close</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let t of (tickets$ | async)">
-        <td class="td">{{ t.id }}</td>
-        <td class="td">{{ t.customerName }}</td>
-        <td class="td">{{ t.productName }}</td>
-        <td class="td">{{ t.status }}</td>
-        <td class="td">
-          <select #sel (change)="assign(t.id, sel.value)" class="border px-2 py-1 rounded">
-            <option value="">Select</option>
-            <option *ngFor="let tech of technicians" [value]="tech.id">{{ tech.name }}</option>
-          </select>
-        </td>
-        <td class="td">
-          <button (click)="close(t.id)" class="btn bg-green-600">Close</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="th">ID</th>
+          <th class="th">Customer</th>
+          <th class="th">Product</th>
+          <th class="th">Status</th>
+          <th class="th">Assign</th>
+          <th class="th">Close</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let t of (tickets$ | async)">
+          <td class="td">{{ t.id }}</td>
+          <td class="td">{{ t.customerName }}</td>
+          <td class="td">{{ t.productName }}</td>
+
+          <!-- Status badge -->
+          <td class="td">
+            <span class="status-badge" [ngClass]="statusClass(t.status)">
+              {{ t.status }}
+            </span>
+          </td>
+
+          <!-- Assign column -->
+          <td class="td">
+            <ng-container *ngIf="t.status !== 'COMPLETED'; else assignedView">
+              <select
+                #sel
+                class="border px-2 py-1 rounded"
+                [ngModel]="t.assignedTo"
+                (change)="assign(t.id, sel.value)"
+              >
+                <option value="">Select</option>
+                <option *ngFor="let tech of technicians" [value]="tech.id">
+                  {{ tech.name }}
+                </option>
+              </select>
+            </ng-container>
+
+            <!-- Read-only assigned name -->
+            <ng-template #assignedView>
+              <span class="text-gray-600">
+                {{ getTechnicianName(t.assignedTo) || 'Unassigned' }}
+              </span>
+            </ng-template>
+          </td>
+
+          <!-- Close button only for completed tickets -->
+          <td class="td">
+            <button
+              *ngIf="t.status === 'COMPLETED'"
+              (click)="close(t.id)"
+              class="btn bg-green-600"
+            >
+              Close
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
