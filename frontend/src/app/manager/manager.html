@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-gray-100">
   <!-- Top Navigation Bar -->
- <nav class="bg-blue-600 text-white p-4 flex justify-between">
+  <nav class="bg-blue-600 text-white p-4 flex justify-between">
     <span class="font-bold">Manager Dashboard</span>
     <div>
       <button (click)="logout()" class="bg-red-500 px-3 py-1 rounded">
@@ -13,6 +13,40 @@
   <div class="p-6">
     <h2 class="text-2xl font-semibold mb-4">Tickets Overview</h2>
 
+    <!-- ✅ Analytics Summary -->
+    <div class="grid grid-cols-3 gap-4 mb-6">
+      <div class="bg-white shadow p-4 rounded text-center">
+        <p class="text-gray-500 text-sm">Total Tickets</p>
+        <p class="text-2xl font-bold text-blue-700">{{ analytics.total }}</p>
+      </div>
+      <div class="bg-white shadow p-4 rounded text-center">
+        <p class="text-gray-500 text-sm">Pending Tickets</p>
+        <p class="text-2xl font-bold text-yellow-600">{{ analytics.pending }}</p>
+      </div>
+      <div class="bg-white shadow p-4 rounded text-center">
+        <p class="text-gray-500 text-sm">Closed Tickets</p>
+        <p class="text-2xl font-bold text-green-700">{{ analytics.closed }}</p>
+      </div>
+    </div>
+
+    <!-- ✅ Filter by Status -->
+    <div class="mb-4 flex items-center">
+      <label class="font-medium mr-2">Filter by Status:</label>
+      <select
+        [(ngModel)]="selectedStatus"
+        (change)="filterTickets()"
+        class="border px-3 py-2 rounded"
+      >
+        <option value="">All</option>
+        <option value="NEW">New</option>
+        <option value="ASSIGNED">Assigned</option>
+        <option value="IN_PROGRESS">In Progress</option>
+        <option value="COMPLETED">Completed</option>
+        <option value="CLOSED">Closed</option>
+      </select>
+    </div>
+
+    <!-- ✅ Ticket Table -->
     <table class="table">
       <thead class="bg-gray-100">
         <tr>
@@ -26,21 +60,18 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let t of (tickets$ | async)">
+        <tr *ngFor="let t of filteredTickets">
           <td class="td">{{ t.id }}</td>
           <td class="td">{{ t.customerName }}</td>
           <td class="td">{{ t.productName }}</td>
 
-          <!-- ✅ Status badge -->
           <td class="td">
             <span class="status-badge" [ngClass]="statusClass(t.status)">
               {{ t.status }}
             </span>
           </td>
 
-          <!-- ✅ Assign column -->
           <td class="td">
-            <!-- Show dropdown only if ticket is not CLOSED or COMPLETED -->
             <ng-container *ngIf="t.status !== 'CLOSED' && t.status !== 'COMPLETED'; else assignedView">
               <select
                 #sel
@@ -55,7 +86,6 @@
               </select>
             </ng-container>
 
-            <!-- ✅ Show assigned technician name if ticket is CLOSED/COMPLETED -->
             <ng-template #assignedView>
               <span class="text-gray-600 font-medium">
                 {{ getTechnicianName(t.assignedTo) || 'Unassigned' }}
@@ -63,7 +93,6 @@
             </ng-template>
           </td>
 
-          <!-- ✅ Show Close button only for COMPLETED -->
           <td class="td">
             <button
               *ngIf="t.status === 'COMPLETED'"
